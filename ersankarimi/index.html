@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Javascript Todo App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="p-8 sm:p-16 bg-gray-800 text-white">
+    <main class="m-auto max-w-md w-full overflow-hidden">
+      <h1
+        class="text-2xl block font-bold py-6 text-gray-400 tracking-widest text-center"
+      >
+        Skilvul Todo List
+      </h1>
+      <div class="w-full flex gap-1">
+        <input
+          class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+          id="input-todo"
+          type="text"
+          value=""
+          placeholder="Write Some Todo"
+        />
+        <button
+          id="btn-submit"
+          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Tambah
+        </button>
+      </div>
+      <ul id="todo-list" class="m-0 my-4 p-0 list-none w-full">
+        <!-- <li class="relative flex justify-between mb-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" checked="true" class="form-checkbox" />
+            <span class="ml-2" style="text-decoration: line-through"
+              >Learn HTML</span
+            >
+          </label>
+          <button class="close-icon-container">
+            <span class="close-icon">x</span>
+          </button>
+        </li>
+        <li class="relative flex justify-between mb-4">
+          <label class="inline-flex items-center">
+            <input type="checkbox" class="form-checkbox" />
+            <span class="ml-2">Learn Javascript</span>
+          </label>
+          <button class="close-icon-container">
+            <span class="close-icon">x</span>
+          </button>
+        </li> -->
+      </ul>
+
+      <div class="flex py-4 border-t border-gray-900 justify-between">
+        <div class="flex">www.agusfikri.com</div>
+        <div class="flex">
+          <button
+            id="filter-clear"
+            class="text-xs mr-3 text-red-500 focus:outline-none hover:underline"
+          >
+            Remove All
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const inputTodo = document.querySelector("#input-todo");
+      const buttonAddTodo = document.querySelector("#btn-submit");
+      const containerTodos = document.querySelector("#todo-list");
+      const removeAllButton = document.querySelector("#filter-clear");
+      let todos = [];
+
+      const createTodo = ({ todo, id, isCompleted }) => {
+        console.log(isCompleted);
+        const todoElement = document.createElement("li");
+        todoElement.classList.add(
+          "relative",
+          "flex",
+          "justify-between",
+          "mb-4"
+        );
+        todoElement.innerHTML = `
+          <label class="inline-flex items-center" for="${id}" >
+            <input type="checkbox" ${
+              isCompleted && "checked"
+            } class="form-checkbox" onclick={handleIsComplete(${id})}>
+            <span class="ml-2 ${isCompleted && "line-through"}">${todo}</span>
+          </label>
+          <button class="close-icon-container" onclick="deleteTodo(${id})">
+            <span class="close-icon">x</span>
+          </button>
+  `;
+
+        containerTodos.appendChild(todoElement);
+      };
+
+      const updateTodos = () => {
+        containerTodos.innerHTML = "";
+        todos.forEach((todo) => createTodo(todo));
+      };
+
+      const handleIsComplete = (todoId) => {
+        todos = [
+          ...todos.map((todo) => {
+            if (todoId === todo.id) todo.isCompleted = !todo.isCompleted;
+            return todo;
+          }),
+        ];
+        updateTodos();
+      };
+
+      const deleteTodo = (todoId) => {
+        todos = [...todos.filter(({ id }) => todoId !== id)];
+        updateTodos();
+      };
+
+      buttonAddTodo.addEventListener("click", () => {
+        todos.push({
+          id: Date.now(),
+          todo: inputTodo.value,
+          isCompleted: false,
+        });
+        inputTodo.value = "";
+        updateTodos();
+      });
+
+      removeAllButton.addEventListener("click", () => {
+        todos = [];
+        updateTodos();
+      });
+    </script>
+  </body>
+</html>
